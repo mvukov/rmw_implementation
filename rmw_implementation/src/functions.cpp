@@ -46,6 +46,8 @@ static std::shared_ptr<rcpputils::SharedLibrary> g_rmw_lib = nullptr;
 std::shared_ptr<rcpputils::SharedLibrary>
 load_library()
 {
+#ifndef RMW_LIBRARY_PATH
+
   std::string env_var;
   try {
     env_var = rcpputils::get_env_var("RMW_IMPLEMENTATION");
@@ -75,6 +77,12 @@ load_library()
       env_var.c_str());
     return nullptr;
   }
+
+#else
+
+  const std::string library_path = RMW_LIBRARY_PATH;
+
+#endif  // RMW_LIBRARY_PATH
 
   try {
     return std::make_shared<rcpputils::SharedLibrary>(library_path.c_str());
